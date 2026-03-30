@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isMembre(foyerId) {
+      return request.auth != null &&
+        request.auth.uid in get(/databases/$(database)/documents/foyers/$(foyerId)).data.membres;
+    }
+
+    // Profil utilisateur : lecture/écriture uniquement par le propriétaire
+    match /utilisateurs/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Foyers : lisible/modifiable par les membres
+    match /foyers/{foyerId} {
+      allow read: if request.auth != null &&
+        request.auth.uid in resource.data.membres;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null &&
+        request.auth.uid in resource.data.membres;
+    }
+
+    // Toutes les autres collections : vérifier l'appartenance au foyer
+    match /{collection}/{docId} {
+      allow read, write: if request.auth != null &&
+        isMembre(resource.data.foyerId);
+      allow create: if request.auth != null &&
+        isMembre(request.resource.data.foyerId);
+    }
+  }
+}
