@@ -30,7 +30,7 @@ describe('useCourses', () => {
     expect(result.current.loading).toBe(false)
   })
 
-  it('returns loading=true when foyerId is null', () => {
+  it('returns loading=false when foyerId is null', () => {
     const { result } = renderHook(() => useCourses(null))
     expect(result.current.loading).toBe(false)
     expect(result.current.articles).toEqual([])
@@ -59,6 +59,19 @@ describe('useCourses', () => {
     const { result } = renderHook(() => useCourses('foyer-1'))
     await act(async () => {
       await result.current.deleteArticle('article-1')
+    })
+    expect(deleteDoc).toHaveBeenCalledOnce()
+  })
+
+  it('calls deleteDoc when clearDone is called with done articles', async () => {
+    const { onSnapshot, deleteDoc } = await import('firebase/firestore')
+    vi.mocked(onSnapshot).mockImplementationOnce((q, cb) => {
+      cb({ docs: [{ id: 'a1', data: () => ({ fait: true }) }] })
+      return mockUnsub
+    })
+    const { result } = renderHook(() => useCourses('foyer-1'))
+    await act(async () => {
+      await result.current.clearDone()
     })
     expect(deleteDoc).toHaveBeenCalledOnce()
   })
