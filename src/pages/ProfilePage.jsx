@@ -1,9 +1,8 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signOut } from 'firebase/auth'
 import { doc, updateDoc } from 'firebase/firestore'
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { auth, db, app } from '../firebase'
+import { auth, db } from '../firebase'
 import { useAuth } from '../contexts/AuthContext'
 import './ProfilePage.css'
 
@@ -15,33 +14,13 @@ const COLORS = [
 export default function ProfilePage() {
   const { user, profile } = useAuth()
   const navigate = useNavigate()
-  const fileRef = useRef()
 
   const [nom, setNom] = useState(profile?.nom ?? '')
   const [couleur, setCouleur] = useState(profile?.couleur ?? '#2563eb')
-  const [photoURL, setPhotoURL] = useState(profile?.photoURL ?? null)
-  const [uploading, setUploading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
   const initial = nom?.[0]?.toUpperCase() ?? '?'
-
-  async function handlePhoto(e) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setUploading(true)
-    try {
-      const storage = getStorage(app)
-      const storageRef = ref(storage, `avatars/${user.uid}`)
-      await uploadBytes(storageRef, file)
-      const url = await getDownloadURL(storageRef)
-      setPhotoURL(url)
-    } catch (err) {
-      console.error('Upload échoué', err)
-    } finally {
-      setUploading(false)
-    }
-  }
 
   async function handleSave() {
     if (!nom.trim()) return
@@ -50,7 +29,6 @@ export default function ProfilePage() {
       await updateDoc(doc(db, 'utilisateurs', user.uid), {
         nom: nom.trim(),
         couleur,
-        ...(photoURL ? { photoURL } : {}),
       })
       setSaved(true)
       setTimeout(() => setSaved(false), 2000)
@@ -72,28 +50,12 @@ export default function ProfilePage() {
         <div style={{ width: 60 }} />
       </div>
 
-      {/* Avatar */}
+      {/* Avatar initiales */}
       <div className="profile__avatar-wrap">
         <div className="profile__avatar" style={{ background: couleur }}>
-          {photoURL
-            ? <img src={photoURL} alt="avatar" className="profile__avatar-img" />
-            : <span>{initial}</span>
-          }
+          <span>{initial}</span>
         </div>
-        <button
-          className="profile__photo-btn"
-          onClick={() => fileRef.current?.click()}
-          disabled={uploading}
-        >
-          {uploading ? 'Envoi…' : '📷 Changer la photo'}
-        </button>
-        <input
-          ref={fileRef}
-          type="file"
-          accept="image/*"
-          style={{ display: 'none' }}
-          onChange={handlePhoto}
-        />
+        <p className="profile__avatar-hint">Ton avatar est généré depuis ton prénom et ta couleur</p>
       </div>
 
       {/* Nom */}
@@ -122,10 +84,11 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Aperçu foyer */}
+      {/* Code foyer */}
       <div className="profile__section">
         <label className="profile__label">Code foyer</label>
         <div className="profile__foyer-code">{profile?.foyerId ?? '—'}</div>
+        <p className="profile__foyer-hint">Partage ce code avec ton/ta partenaire pour qu'il/elle rejoigne ton foyer</p>
       </div>
 
       {/* Save */}
