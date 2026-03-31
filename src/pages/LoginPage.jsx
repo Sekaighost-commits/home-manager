@@ -91,8 +91,8 @@ export default function LoginPage() {
     <div className="login-page">
       <div className="login-card">
         <div className="login-handle" />
-        <div className="login-logo">🏠</div>
-        <h1 className="login-title">Home Manager</h1>
+        <div className="login-logo">🧄🥦</div>
+        <h1 className="login-title">Ail & Broco</h1>
 
         <div className="login-tabs">
           <button
