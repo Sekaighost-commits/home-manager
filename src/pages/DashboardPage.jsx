@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import ModuleCard from '../components/ModuleCard'
 import AlertBanner from '../components/AlertBanner'
@@ -31,14 +32,17 @@ export default function DashboardPage() {
           <div className="dashboard__date">{formatDate()}</div>
           <div className="dashboard__greeting">Bonjour {profile?.nom} 👋</div>
         </div>
-        <div className="dashboard__avatars">
+        <Link to="/profil" className="dashboard__avatars">
           <div
             className="dashboard__avatar"
             style={{ background: profile?.couleur ?? '#2563eb' }}
           >
-            {initial}
+            {profile?.photoURL
+              ? <img src={profile.photoURL} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+              : initial
+            }
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* AlertBanner — alimenté dynamiquement dans Plan 2 */}
