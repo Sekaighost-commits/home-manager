@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { AuthProvider, useAuth } from '../src/contexts/AuthContext'
 
+// Mock Firebase Auth
 vi.mock('../src/firebase.js', () => ({
   auth: {},
   db: {},
@@ -9,8 +10,8 @@ vi.mock('../src/firebase.js', () => ({
 
 vi.mock('firebase/auth', () => ({
   onAuthStateChanged: vi.fn((auth, callback) => {
-    callback(null)
-    return vi.fn()
+    callback(null) // utilisateur non connecté par défaut
+    return vi.fn() // unsubscribe
   }),
 }))
 
@@ -37,5 +38,12 @@ describe('AuthContext', () => {
       expect(screen.getByTestId('user').textContent).toBe('disconnected')
       expect(screen.getByTestId('profile').textContent).toBe('no-profile')
     })
+  })
+
+  it('shows loading state initially', async () => {
+    const { onAuthStateChanged } = await import('firebase/auth')
+    vi.mocked(onAuthStateChanged).mockImplementationOnce(() => vi.fn())
+    render(<AuthProvider><TestConsumer /></AuthProvider>)
+    expect(screen.getByText('loading')).toBeInTheDocument()
   })
 })
