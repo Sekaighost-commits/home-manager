@@ -155,7 +155,7 @@
 .login-btn {
   width: 100%;
   padding: 1rem;
-  background: var(--color-yves);
+  background: linear-gradient(135deg, var(--color-yves), var(--color-yves-light));
   border: none;
   border-radius: var(--radius-input);
   color: #fff;

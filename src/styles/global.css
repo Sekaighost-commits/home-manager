@@ -19,15 +19,15 @@
   --text-muted: rgba(255, 255, 255, 0.3);
 
   /* Couleurs utilisateurs */
-  --color-yves: #0a84ff;
-  --color-yves-light: #64b5ff;
-  --color-enza: #30d158;
-  --color-enza-light: #7ddf98;
+  --color-yves: #2563eb;
+  --color-yves-light: #60a5fa;
+  --color-enza: #16a34a;
+  --color-enza-light: #4ade80;
 
   /* Système */
-  --color-alert: #ff453a;
-  --color-alert-light: #ff6961;
-  --color-warn: #ffd60a;
+  --color-alert: #ef4444;
+  --color-alert-light: #f87171;
+  --color-warn: #f59e0b;
 
   /* Rayons iOS */
   --radius-card: 20px;
