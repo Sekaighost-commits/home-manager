@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useDashboardSummary } from '../hooks/useDashboardSummary'
 import ModuleCard from '../components/ModuleCard'
 import AlertBanner from '../components/AlertBanner'
 import '../styles/dashboard.css'
@@ -23,7 +24,14 @@ function formatDate() {
 
 export default function DashboardPage() {
   const { profile } = useAuth()
+  const summary = useDashboardSummary(profile?.foyerId)
   const initial = profile?.nom?.[0]?.toUpperCase() ?? '?'
+
+  function getCardProps(id) {
+    if (id === 'courses') return { subtitle: summary.courses.subtitle, badge: summary.courses.badge }
+    if (id === 'frigo') return { subtitle: summary.frigo.subtitle, badge: summary.frigo.badge, variant: summary.frigo.badge ? 'warn' : undefined }
+    return {}
+  }
 
   return (
     <div className="dashboard">
@@ -37,20 +45,16 @@ export default function DashboardPage() {
             className="dashboard__avatar"
             style={{ background: profile?.couleur ?? '#2563eb' }}
           >
-            {profile?.photoURL
-              ? <img src={profile.photoURL} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-              : initial
-            }
+            {initial}
           </div>
         </Link>
       </div>
 
-      {/* AlertBanner — alimenté dynamiquement dans Plan 2 */}
-      <AlertBanner message={null} />
+      <AlertBanner message={summary.frigo.alertMessage} />
 
       <div className="dashboard__grid">
         {MODULES.map(m => (
-          <ModuleCard key={m.id} {...m} />
+          <ModuleCard key={m.id} {...m} {...getCardProps(m.id)} />
         ))}
       </div>
     </div>

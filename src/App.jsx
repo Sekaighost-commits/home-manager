@@ -1,9 +1,10 @@
-// src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import ProfilePage from './pages/ProfilePage'
+import CoursesPage from './pages/CoursesPage'
+import FrigoPage from './pages/FrigoPage'
 import ComingSoonPage from './pages/ComingSoonPage'
 
 function ProtectedRoute({ children }) {
@@ -30,18 +31,18 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-          <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-          <Route path="/profil" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-          <Route path="/courses"   element={<ProtectedRoute><ComingSoonPage /></ProtectedRoute>} />
+          <Route path="/login"     element={<PublicRoute><LoginPage /></PublicRoute>} />
+          <Route path="/"          element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/profil"    element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/courses"   element={<ProtectedRoute><CoursesPage /></ProtectedRoute>} />
+          <Route path="/frigo"     element={<ProtectedRoute><FrigoPage /></ProtectedRoute>} />
           <Route path="/repas"     element={<ProtectedRoute><ComingSoonPage /></ProtectedRoute>} />
-          <Route path="/frigo"     element={<ProtectedRoute><ComingSoonPage /></ProtectedRoute>} />
           <Route path="/menage"    element={<ProtectedRoute><ComingSoonPage /></ProtectedRoute>} />
           <Route path="/bricolage" element={<ProtectedRoute><ComingSoonPage /></ProtectedRoute>} />
           <Route path="/depenses"  element={<ProtectedRoute><ComingSoonPage /></ProtectedRoute>} />
           <Route path="/agenda"    element={<ProtectedRoute><ComingSoonPage /></ProtectedRoute>} />
           <Route path="/notes"     element={<ProtectedRoute><ComingSoonPage /></ProtectedRoute>} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*"          element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
