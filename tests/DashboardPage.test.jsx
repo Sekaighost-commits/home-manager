@@ -10,6 +10,13 @@ vi.mock('../src/contexts/AuthContext', () => ({
   }),
 }))
 
+vi.mock('../src/hooks/useDashboardSummary', () => ({
+  useDashboardSummary: () => ({
+    courses: { subtitle: '2 à acheter', badge: null },
+    frigo: { subtitle: '5 produits', badge: null, alertMessage: null },
+  }),
+}))
+
 const wrap = (ui) => render(<MemoryRouter>{ui}</MemoryRouter>)
 
 describe('DashboardPage', () => {
@@ -28,5 +35,10 @@ describe('DashboardPage', () => {
     expect(screen.getByText('Dépenses')).toBeInTheDocument()
     expect(screen.getByText('Agenda')).toBeInTheDocument()
     expect(screen.getByText('Notes')).toBeInTheDocument()
+  })
+
+  it('shows courses subtitle', () => {
+    wrap(<DashboardPage />)
+    expect(screen.getByText('2 à acheter')).toBeInTheDocument()
   })
 })
