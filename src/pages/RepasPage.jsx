@@ -28,8 +28,6 @@ export default function RepasPage() {
 
   const pending = filtered.filter(i => !i.fait)
   const cuisinees = filtered.filter(i => i.fait)
-  const hasCuisinees = idees.some(i => i.fait)
-
   async function handleSubmit(e) {
     e.preventDefault()
     const trimmed = nom.trim()
@@ -112,11 +110,9 @@ export default function RepasPage() {
                 </button>
               </div>
             ))}
-            {hasCuisinees && (
-              <button className="clear-btn" onClick={clearCuisinees}>
-                Vider les cuisinées
-              </button>
-            )}
+            <button className="clear-btn" onClick={clearCuisinees}>
+              Vider les cuisinées
+            </button>
           </>
         )}
       </div>
