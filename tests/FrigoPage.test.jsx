@@ -31,13 +31,20 @@ const wrap = (ui) => render(<MemoryRouter>{ui}</MemoryRouter>)
 describe('FrigoPage', () => {
   it('renders the page title', () => {
     wrap(<FrigoPage />)
-    expect(screen.getByText('Frigo')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Frigo' })).toBeInTheDocument()
   })
 
   it('renders all products by default', () => {
     wrap(<FrigoPage />)
     expect(screen.getByText('Yaourt')).toBeInTheDocument()
     expect(screen.getByText('Glace')).toBeInTheDocument()
+  })
+
+  it('filters to frigo products when Frigo pill is clicked', () => {
+    wrap(<FrigoPage />)
+    fireEvent.click(screen.getByRole('button', { name: 'Frigo' }))
+    expect(screen.getByText('Yaourt')).toBeInTheDocument()
+    expect(screen.queryByText('Glace')).not.toBeInTheDocument()
   })
 
   it('filters by emplacement when pill is clicked', () => {

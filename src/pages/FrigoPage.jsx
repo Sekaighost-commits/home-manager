@@ -47,7 +47,7 @@ export default function FrigoPage() {
   const [filtre, setFiltre] = useState('Tout')
   const [showForm, setShowForm] = useState(false)
 
-  const PILL_TO_EMPLACEMENT = { 'Réfrigérateur': 'frigo', 'Congélateur': 'congelateur', 'Garde-manger': 'garde-manger' }
+  const PILL_TO_EMPLACEMENT = { 'Frigo': 'frigo', 'Congélateur': 'congelateur', 'Garde-manger': 'garde-manger' }
   const filtered = filtre === 'Tout' ? produits : produits.filter(p => p.emplacement === PILL_TO_EMPLACEMENT[filtre])
 
   async function handleAdd(e) {
@@ -85,7 +85,7 @@ export default function FrigoPage() {
       </header>
 
       <div className="filter-pills">
-        {['Tout', 'Réfrigérateur', 'Congélateur', 'Garde-manger'].map(c => (
+        {['Tout', 'Frigo', 'Congélateur', 'Garde-manger'].map(c => (
           <button
             key={c}
             className={`filter-pill ${filtre === c ? 'active' : ''}`}
