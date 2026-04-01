@@ -22,6 +22,8 @@ export default function RepasPage() {
   const [nom, setNom] = useState('')
   const [type, setType] = useState('dîner')
 
+  if (loading) return <div className="module-page" />
+
   const filtered = activePill === 'Tout'
     ? idees
     : idees.filter(i => i.type === PILL_TO_TYPE[activePill])
