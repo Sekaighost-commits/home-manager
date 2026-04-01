@@ -11,7 +11,13 @@ const TAG_LABELS = { frigo: 'réfrigérateur', congelateur: 'congélateur', 'gar
 function ProduitItem({ produit, onDelete }) {
   const status = getExpiryStatus(produit.dateExpiration)
   const daysLeft = produit.dateExpiration
-    ? Math.ceil((new Date(produit.dateExpiration) - new Date()) / (1000 * 60 * 60 * 24))
+    ? (() => {
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        const exp = new Date(produit.dateExpiration)
+        exp.setHours(0, 0, 0, 0)
+        return Math.ceil((exp - today) / (1000 * 60 * 60 * 24))
+      })()
     : null
 
   return (
