@@ -29,6 +29,8 @@ export default function MenagePage() {
   const [nom, setNom] = useState('')
   const [frequence, setFrequence] = useState('hebdomadaire')
 
+  if (loading) return <div className="module-page" />
+
   const filtered = activePill === 'Tout'
     ? taches
     : taches.filter(t => t.frequence === PILL_TO_FREQ[activePill])
