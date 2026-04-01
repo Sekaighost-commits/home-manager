@@ -30,6 +30,8 @@ export default function DashboardPage() {
   function getCardProps(id) {
     if (id === 'courses') return { subtitle: summary.courses.subtitle, badge: summary.courses.badge }
     if (id === 'frigo') return { subtitle: summary.frigo.subtitle, badge: summary.frigo.badge, variant: summary.frigo.badge ? 'warn' : undefined }
+    if (id === 'repas') return { subtitle: summary.repas.subtitle, badge: summary.repas.badge }
+    if (id === 'menage') return { subtitle: summary.menage.subtitle, badge: summary.menage.badge, variant: summary.menage.badge ? 'warn' : undefined }
     return {}
   }
 
