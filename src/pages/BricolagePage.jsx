@@ -110,8 +110,8 @@ export default function BricolagePage() {
           value={priorite}
           onChange={e => setPriorite(e.target.value)}
         >
-          <option value="urgent">Urgente</option>
           <option value="normal">Normale</option>
+          <option value="urgent">Urgente</option>
           <option value="low">Basse</option>
         </select>
         <input
