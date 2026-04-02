@@ -45,6 +45,7 @@ describe('useBricolage', () => {
     expect(addDoc).toHaveBeenCalledOnce()
     const callArg = vi.mocked(addDoc).mock.calls[0][1]
     expect(callArg.statut).toBe('todo')
+    expect(callArg.foyerId).toBe('foyer-1')
   })
 
   it('calls updateDoc when updateStatut is called', async () => {
