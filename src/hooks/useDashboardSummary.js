@@ -4,6 +4,7 @@ import { useRepas } from './useRepas'
 import { useMenage } from './useMenage'
 import { useBricolage } from './useBricolage'
 import { useNotes } from './useNotes'
+import { useDepenses } from './useDepenses'
 
 export function useDashboardSummary(foyerId) {
   const { articles } = useCourses(foyerId)
@@ -12,6 +13,7 @@ export function useDashboardSummary(foyerId) {
   const { taches } = useMenage(foyerId)
   const { travaux } = useBricolage(foyerId)
   const { notes } = useNotes(foyerId)
+  const { depenses } = useDepenses(foyerId)
 
   const uncheckedCount = articles.filter(a => !a.fait).length
   const coursesSummary = {
@@ -54,6 +56,12 @@ export function useDashboardSummary(foyerId) {
     badge: null,
   }
 
+  const totalDepenses = depenses.reduce((s, d) => s + (d.montant ?? 0), 0)
+  const depensesSummary = {
+    subtitle: depenses.length > 0 ? `${totalDepenses.toFixed(2)} €` : 'Aucune dépense',
+    badge: null,
+  }
+
   return {
     courses: coursesSummary,
     frigo: frigoSummary,
@@ -61,5 +69,6 @@ export function useDashboardSummary(foyerId) {
     menage: menageSummary,
     bricolage: bricolageSummary,
     notes: notesSummary,
+    depenses: depensesSummary,
   }
 }
