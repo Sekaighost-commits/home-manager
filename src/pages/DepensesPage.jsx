@@ -74,7 +74,7 @@ export default function DepensesPage() {
           <div key={dep.id} className="list-item">
             <div className="list-item__body">
               <div className="list-item__nom">{dep.description}</div>
-              <div className="list-item__meta">{`${dep.categorie} · ${dep.montant.toFixed(2)} €`}</div>
+              <div className="list-item__meta">{dep.categorie} · {(typeof dep.montant === 'number' ? dep.montant : 0).toFixed(2)} €</div>
             </div>
             <button
               className="list-item__delete"
@@ -94,8 +94,7 @@ export default function DepensesPage() {
           onChange={e => setCategorie(e.target.value)}
           aria-label="Catégorie"
         >
-
-          {CATEGORIES.map(c => <option key={c} value={c}>{CAT_SHORT[c]}</option>)}
+          {CATEGORIES.map(c => <option key={c} value={c}>{CAT_SHORT[c] ?? c}</option>)}
         </select>
         <input
           className="add-form__input"
