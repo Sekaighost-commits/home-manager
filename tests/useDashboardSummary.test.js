@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useDashboardSummary } from '../src/hooks/useDashboardSummary'
 import { useRepas } from '../src/hooks/useRepas'
 import { useMenage } from '../src/hooks/useMenage'
+import { useDepenses } from '../src/hooks/useDepenses'
 
 vi.mock('../src/hooks/useCourses', () => ({
   useCourses: vi.fn(() => ({
@@ -45,6 +46,10 @@ vi.mock('../src/hooks/useMenage', () => ({
     ],
     loading: false,
   })),
+}))
+
+vi.mock('../src/hooks/useDepenses', () => ({
+  useDepenses: vi.fn(() => ({ depenses: [], loading: false })),
 }))
 
 describe('useDashboardSummary', () => {
@@ -121,5 +126,28 @@ describe('useDashboardSummary', () => {
     })
     const { result } = renderHook(() => useDashboardSummary('foyer-1'))
     expect(result.current.menage.badge).toBeNull()
+  })
+
+  // ── Dépenses ──
+  it('depenses subtitle shows "Aucune dépense" when empty', () => {
+    const { result } = renderHook(() => useDashboardSummary('foyer-1'))
+    expect(result.current.depenses.subtitle).toBe('Aucune dépense')
+  })
+
+  it('depenses subtitle shows total when depenses exist', () => {
+    vi.mocked(useDepenses).mockReturnValueOnce({
+      depenses: [
+        { id: 'd1', montant: 20.00 },
+        { id: 'd2', montant: 35.50 },
+      ],
+      loading: false,
+    })
+    const { result } = renderHook(() => useDashboardSummary('foyer-1'))
+    expect(result.current.depenses.subtitle).toBe('55.50 €')
+  })
+
+  it('depenses badge is null', () => {
+    const { result } = renderHook(() => useDashboardSummary('foyer-1'))
+    expect(result.current.depenses.badge).toBeNull()
   })
 })

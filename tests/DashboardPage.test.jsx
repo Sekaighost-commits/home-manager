@@ -16,6 +16,7 @@ vi.mock('../src/hooks/useDashboardSummary', () => ({
     frigo: { subtitle: '1 expirent bientôt', badge: 1, alertMessage: '1 produit expire dans 3 jours ou moins' },
     repas: { subtitle: '3 idée(s)', badge: null },
     menage: { subtitle: '2 à faire', badge: 2 },
+    depenses: { subtitle: 'Aucune dépense', badge: null },
   })),
 }))
 
@@ -58,5 +59,10 @@ describe('DashboardPage', () => {
     wrap(<DashboardPage />)
     const badges = screen.getAllByText('2')
     expect(badges.length).toBeGreaterThan(0)
+  })
+
+  it('shows depenses subtitle on dashboard card', () => {
+    wrap(<DashboardPage />)
+    expect(screen.getByText('Aucune dépense')).toBeInTheDocument()
   })
 })
