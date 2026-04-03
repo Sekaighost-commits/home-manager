@@ -3,6 +3,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useDashboardSummary } from '../src/hooks/useDashboardSummary'
 import { useRepas } from '../src/hooks/useRepas'
 import { useMenage } from '../src/hooks/useMenage'
+import { useBricolage } from '../src/hooks/useBricolage'
+import { useNotes } from '../src/hooks/useNotes'
 import { useDepenses } from '../src/hooks/useDepenses'
 
 vi.mock('../src/hooks/useCourses', () => ({
@@ -48,9 +50,32 @@ vi.mock('../src/hooks/useMenage', () => ({
   })),
 }))
 
+vi.mock('../src/hooks/useBricolage', () => ({
+  useBricolage: vi.fn(() => ({
+    travaux: [
+      { id: 'b1', titre: 'Réparer robinet', priorite: 'urgent', statut: 'todo' },
+      { id: 'b2', titre: 'Peindre salon', priorite: 'normal', statut: 'inprogress' },
+      { id: 'b3', titre: 'Changer ampoule', priorite: 'low', statut: 'done' },
+    ],
+    loading: false,
+  })),
+}))
+
+vi.mock('../src/hooks/useNotes', () => ({
+  useNotes: vi.fn(() => ({
+    notes: [
+      { id: 'n1', contenu: 'Appeler le plombier' },
+      { id: 'n2', contenu: 'Acheter des fleurs' },
+    ],
+    loading: false,
+  })),
+}))
+
 vi.mock('../src/hooks/useDepenses', () => ({
   useDepenses: vi.fn(() => ({ depenses: [], loading: false })),
 }))
+
+
 
 describe('useDashboardSummary', () => {
   beforeEach(() => vi.clearAllMocks())
@@ -126,6 +151,55 @@ describe('useDashboardSummary', () => {
     })
     const { result } = renderHook(() => useDashboardSummary('foyer-1'))
     expect(result.current.menage.badge).toBeNull()
+  })
+
+  // ── Bricolage ──
+  it('bricolage subtitle shows urgent count when urgents exist', () => {
+    const { result } = renderHook(() => useDashboardSummary('foyer-1'))
+    expect(result.current.bricolage.subtitle).toBe('1 urgent(s)')
+  })
+
+  it('bricolage badge shows urgent count', () => {
+    const { result } = renderHook(() => useDashboardSummary('foyer-1'))
+    expect(result.current.bricolage.badge).toBe(1)
+  })
+
+  it('bricolage subtitle shows active count when no urgents', () => {
+    vi.mocked(useBricolage).mockReturnValueOnce({
+      travaux: [
+        { id: 'b1', priorite: 'normal', statut: 'todo' },
+        { id: 'b2', priorite: 'low', statut: 'inprogress' },
+      ],
+      loading: false,
+    })
+    const { result } = renderHook(() => useDashboardSummary('foyer-1'))
+    expect(result.current.bricolage.subtitle).toBe('2 en cours')
+  })
+
+  it('bricolage subtitle shows "Tout est fait" when all done', () => {
+    vi.mocked(useBricolage).mockReturnValueOnce({
+      travaux: [{ id: 'b1', priorite: 'normal', statut: 'done' }],
+      loading: false,
+    })
+    const { result } = renderHook(() => useDashboardSummary('foyer-1'))
+    expect(result.current.bricolage.subtitle).toBe('Tout est fait')
+  })
+
+  // ── Notes ──
+  it('notes subtitle shows total count', () => {
+    const { result } = renderHook(() => useDashboardSummary('foyer-1'))
+    expect(result.current.notes.subtitle).toBe('2 note(s)')
+  })
+
+  it('notes badge is null', () => {
+    const { result } = renderHook(() => useDashboardSummary('foyer-1'))
+    expect(result.current.notes.badge).toBeNull()
+  })
+
+  it('notes subtitle shows "Aucune note" when empty', () => {
+    vi.mocked(useNotes).mockReturnValueOnce({ notes: [], loading: false })
+    const { result } = renderHook(() => useDashboardSummary('foyer-1'))
+    expect(result.current.notes.subtitle).toBe('Aucune note')
   })
 
   // ── Dépenses ──
