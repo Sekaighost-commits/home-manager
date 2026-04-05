@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useBricolage } from '../hooks/useBricolage'
+import AddSheet from '../components/AddSheet'
 import '../styles/module.css'
 
 const PILLS = ['Tout', 'À faire', 'En cours', 'Terminé']
@@ -30,6 +31,7 @@ export default function BricolagePage() {
   const [activePill, setActivePill] = useState('Tout')
   const [titre, setTitre] = useState('')
   const [priorite, setPriorite] = useState('normal')
+  const [showForm, setShowForm] = useState(false)
 
   if (loading) return <div className="module-page" style={{ '--module-accent': '#f59e0b' }} />
 
@@ -43,6 +45,7 @@ export default function BricolagePage() {
     if (!trimmed) return
     await addTravail({ titre: trimmed, notes: '', priorite, createdBy: user.uid })
     setTitre('')
+    setShowForm(false)
   }
 
   return (
@@ -99,29 +102,29 @@ export default function BricolagePage() {
         ))}
       </div>
 
-      <form
-        role="form"
-        className="add-form"
-        onSubmit={handleSubmit}
-        aria-label="Ajouter un travail"
-      >
-        <select
-          className="add-form__select"
-          value={priorite}
-          onChange={e => setPriorite(e.target.value)}
-        >
-          <option value="normal">Normale</option>
-          <option value="urgent">Urgente</option>
-          <option value="low">Basse</option>
-        </select>
-        <input
-          className="add-form__input"
-          placeholder="Titre du travail…"
-          value={titre}
-          onChange={e => setTitre(e.target.value)}
-        />
-        <button type="submit" className="add-form__btn" aria-label="Ajouter">+</button>
-      </form>
+      <button className="fab" aria-label="Nouveau" onClick={() => setShowForm(true)}>+</button>
+
+      <AddSheet open={showForm} onClose={() => setShowForm(false)} title="Nouveau travail">
+        <form role="form" className="sheet-form" onSubmit={handleSubmit} aria-label="Ajouter un travail">
+          <select
+            className="add-form__select"
+            value={priorite}
+            onChange={e => setPriorite(e.target.value)}
+            style={{ maxWidth: 'none' }}
+          >
+            <option value="normal">Normale</option>
+            <option value="urgent">Urgente</option>
+            <option value="low">Basse</option>
+          </select>
+          <input
+            className="add-form__input"
+            placeholder="Titre du travail…"
+            value={titre}
+            onChange={e => setTitre(e.target.value)}
+          />
+          <button type="submit" className="sheet-form__submit">Ajouter</button>
+        </form>
+      </AddSheet>
     </div>
   )
 }
