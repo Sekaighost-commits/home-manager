@@ -19,6 +19,7 @@ vi.mock('../src/hooks/useDashboardSummary', () => ({
     bricolage: { subtitle: '1 urgent(s)', badge: 1 },
     notes: { subtitle: '2 note(s)', badge: null },
     depenses: { subtitle: 'Aucune dépense', badge: null },
+    agenda: { subtitle: '1 à venir', badge: null },
   })),
 }))
 
@@ -82,5 +83,10 @@ describe('DashboardPage', () => {
   it('shows depenses subtitle on dashboard card', () => {
     wrap(<DashboardPage />)
     expect(screen.getByText('Aucune dépense')).toBeInTheDocument()
+  })
+
+  it('shows agenda subtitle on dashboard card', () => {
+    wrap(<DashboardPage />)
+    expect(screen.getByText('1 à venir')).toBeInTheDocument()
   })
 })

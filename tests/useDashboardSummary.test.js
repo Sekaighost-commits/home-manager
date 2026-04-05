@@ -6,6 +6,7 @@ import { useMenage } from '../src/hooks/useMenage'
 import { useBricolage } from '../src/hooks/useBricolage'
 import { useNotes } from '../src/hooks/useNotes'
 import { useDepenses } from '../src/hooks/useDepenses'
+import { useAgenda } from '../src/hooks/useAgenda'
 
 vi.mock('../src/hooks/useCourses', () => ({
   useCourses: vi.fn(() => ({
@@ -75,7 +76,15 @@ vi.mock('../src/hooks/useDepenses', () => ({
   useDepenses: vi.fn(() => ({ depenses: [], loading: false })),
 }))
 
-
+vi.mock('../src/hooks/useAgenda', () => ({
+  useAgenda: vi.fn(() => ({
+    evenements: [
+      { id: 'e1', titre: 'Anniversaire de Enza', date: '2099-12-01' }, // always upcoming
+      { id: 'e2', titre: 'Old event', date: '2020-01-01' },            // always past
+    ],
+    loading: false,
+  })),
+}))
 
 describe('useDashboardSummary', () => {
   beforeEach(() => vi.clearAllMocks())
@@ -223,5 +232,25 @@ describe('useDashboardSummary', () => {
   it('depenses badge is null', () => {
     const { result } = renderHook(() => useDashboardSummary('foyer-1'))
     expect(result.current.depenses.badge).toBeNull()
+  })
+
+  // ── Agenda ──
+  it('agenda subtitle shows upcoming count', () => {
+    const { result } = renderHook(() => useDashboardSummary('foyer-1'))
+    expect(result.current.agenda.subtitle).toBe('1 à venir')
+  })
+
+  it('agenda badge is null', () => {
+    const { result } = renderHook(() => useDashboardSummary('foyer-1'))
+    expect(result.current.agenda.badge).toBeNull()
+  })
+
+  it('agenda subtitle shows "Aucun évènement" when no upcoming events', () => {
+    vi.mocked(useAgenda).mockReturnValueOnce({
+      evenements: [{ id: 'e1', titre: 'Old event', date: '2020-01-01' }],
+      loading: false,
+    })
+    const { result } = renderHook(() => useDashboardSummary('foyer-1'))
+    expect(result.current.agenda.subtitle).toBe('Aucun évènement')
   })
 })
