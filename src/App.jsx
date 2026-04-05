@@ -10,6 +10,7 @@ import MenagePage from './pages/MenagePage'
 import BricolagePage from './pages/BricolagePage'
 import DepensesPage from './pages/DepensesPage'
 import NotesPage from './pages/NotesPage'
+import AgendaPage from './pages/AgendaPage'
 import ComingSoonPage from './pages/ComingSoonPage'
 
 function ProtectedRoute({ children }) {
@@ -45,7 +46,7 @@ export default function App() {
           <Route path="/menage"    element={<ProtectedRoute><MenagePage /></ProtectedRoute>} />
           <Route path="/bricolage" element={<ProtectedRoute><BricolagePage /></ProtectedRoute>} />
           <Route path="/depenses"  element={<ProtectedRoute><DepensesPage /></ProtectedRoute>} />
-          <Route path="/agenda"    element={<ProtectedRoute><ComingSoonPage /></ProtectedRoute>} />
+          <Route path="/agenda"    element={<ProtectedRoute><AgendaPage /></ProtectedRoute>} />
           <Route path="/notes"     element={<ProtectedRoute><NotesPage /></ProtectedRoute>} />
           <Route path="*"          element={<Navigate to="/" replace />} />
         </Routes>

@@ -5,6 +5,7 @@ import { useMenage } from './useMenage'
 import { useBricolage } from './useBricolage'
 import { useNotes } from './useNotes'
 import { useDepenses } from './useDepenses'
+import { useAgenda } from './useAgenda'
 
 export function useDashboardSummary(foyerId) {
   const { articles } = useCourses(foyerId)
@@ -14,6 +15,7 @@ export function useDashboardSummary(foyerId) {
   const { travaux } = useBricolage(foyerId)
   const { notes } = useNotes(foyerId)
   const { depenses } = useDepenses(foyerId)
+  const { evenements } = useAgenda(foyerId)
 
   const uncheckedCount = articles.filter(a => !a.fait).length
   const coursesSummary = {
@@ -62,6 +64,13 @@ export function useDashboardSummary(foyerId) {
     badge: null,
   }
 
+  const today = new Date().toISOString().slice(0, 10)
+  const upcomingCount = evenements.filter(e => e.date >= today).length
+  const agendaSummary = {
+    subtitle: upcomingCount > 0 ? `${upcomingCount} à venir` : 'Aucun évènement',
+    badge: null,
+  }
+
   return {
     courses: coursesSummary,
     frigo: frigoSummary,
@@ -70,5 +79,6 @@ export function useDashboardSummary(foyerId) {
     bricolage: bricolageSummary,
     notes: notesSummary,
     depenses: depensesSummary,
+    agenda: agendaSummary,
   }
 }

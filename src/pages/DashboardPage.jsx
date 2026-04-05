@@ -34,6 +34,7 @@ export default function DashboardPage() {
     if (id === 'menage') return { subtitle: summary.menage.subtitle, badge: summary.menage.badge, variant: summary.menage.badge ? 'warn' : undefined }
     if (id === 'bricolage') return { subtitle: summary.bricolage.subtitle, badge: summary.bricolage.badge, variant: summary.bricolage.badge ? 'warn' : undefined }
     if (id === 'depenses') return { subtitle: summary.depenses.subtitle, badge: summary.depenses.badge }
+    if (id === 'agenda') return { subtitle: summary.agenda.subtitle, badge: summary.agenda.badge }
     if (id === 'notes') return { subtitle: summary.notes.subtitle, badge: summary.notes.badge }
     return {}
   }
