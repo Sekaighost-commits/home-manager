@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { MemoryRouter } from 'react-router-dom'
 import AgendaPage from '../src/pages/AgendaPage'
+import { useAgenda } from '../src/hooks/useAgenda'
 
 vi.mock('../src/contexts/AuthContext', () => ({
   useAuth: () => ({
@@ -13,22 +14,32 @@ vi.mock('../src/contexts/AuthContext', () => ({
 const mockAddEvenement = vi.fn()
 const mockDeleteEvenement = vi.fn()
 
+const SAMPLE_EVENTS = [
+  { id: 'e1', titre: 'Anniversaire de Enza', date: '2026-04-20', ajoutePar: 'uid-yves' },
+  { id: 'e2', titre: 'Réunion école', date: '2026-05-03', ajoutePar: 'uid-yves' },
+]
+
 vi.mock('../src/hooks/useAgenda', () => ({
-  useAgenda: () => ({
-    evenements: [
-      { id: 'e1', titre: 'Anniversaire de Enza', date: '2026-04-20', ajoutePar: 'uid-yves' },
-      { id: 'e2', titre: 'Réunion école', date: '2026-05-03', ajoutePar: 'uid-yves' },
-    ],
+  useAgenda: vi.fn(() => ({
+    evenements: SAMPLE_EVENTS,
     loading: false,
     addEvenement: mockAddEvenement,
     deleteEvenement: mockDeleteEvenement,
-  }),
+  })),
 }))
 
 const wrap = (ui) => render(<MemoryRouter>{ui}</MemoryRouter>)
 
 describe('AgendaPage', () => {
-  beforeEach(() => vi.clearAllMocks())
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.mocked(useAgenda).mockReturnValue({
+      evenements: SAMPLE_EVENTS,
+      loading: false,
+      addEvenement: mockAddEvenement,
+      deleteEvenement: mockDeleteEvenement,
+    })
+  })
 
   it('renders the page title', () => {
     wrap(<AgendaPage />)
@@ -88,5 +99,28 @@ describe('AgendaPage', () => {
     const deletes = screen.getAllByRole('button', { name: /supprimer/i })
     fireEvent.click(deletes[0])
     await waitFor(() => expect(mockDeleteEvenement).toHaveBeenCalledWith('e1'))
+  })
+
+  it('shows empty state when no evenements', () => {
+    vi.mocked(useAgenda).mockReturnValueOnce({
+      evenements: [],
+      loading: false,
+      addEvenement: mockAddEvenement,
+      deleteEvenement: mockDeleteEvenement,
+    })
+    wrap(<AgendaPage />)
+    expect(screen.getByText('Aucun évènement')).toBeInTheDocument()
+  })
+
+  it('renders loading guard while loading', () => {
+    vi.mocked(useAgenda).mockReturnValueOnce({
+      evenements: [],
+      loading: true,
+      addEvenement: mockAddEvenement,
+      deleteEvenement: mockDeleteEvenement,
+    })
+    const { container } = wrap(<AgendaPage />)
+    expect(screen.queryByText('Agenda')).not.toBeInTheDocument()
+    expect(container.querySelector('.module-page')).toBeInTheDocument()
   })
 })
