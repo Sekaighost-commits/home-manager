@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useCourses } from '../hooks/useCourses'
+import AddSheet from '../components/AddSheet'
 import '../styles/module.css'
 
 const CATEGORIES = ['Frais', 'Surgelés', 'Épicerie', 'Hygiène', 'Boissons', 'Autre']
@@ -40,6 +41,7 @@ export default function CoursesPage() {
   const [newNom, setNewNom] = useState('')
   const [categorie, setCategorie] = useState('Épicerie')
   const [filtre, setFiltre] = useState('Tout')
+  const [showForm, setShowForm] = useState(false)
 
   const unchecked = articles.filter(a => !a.fait)
   const checked = articles.filter(a => a.fait)
@@ -50,6 +52,7 @@ export default function CoursesPage() {
     if (!newNom.trim()) return
     await addArticle({ nom: newNom.trim(), categorie, ajoutePar: user.uid })
     setNewNom('')
+    setShowForm(false)
   }
 
   if (loading) return <div className="module-page" style={{ '--module-accent': '#22c55e' }} />
@@ -109,22 +112,27 @@ export default function CoursesPage() {
         )}
       </div>
 
-      <form aria-label="form" role="form" className="add-form" onSubmit={handleAdd}>
-        <select
-          className="add-form__select"
-          value={categorie}
-          onChange={e => setCategorie(e.target.value)}
-        >
-          {CATEGORIES.map(c => <option key={c}>{c}</option>)}
-        </select>
-        <input
-          className="add-form__input"
-          value={newNom}
-          onChange={e => setNewNom(e.target.value)}
-          placeholder="Ajouter un article…"
-        />
-        <button type="submit" className="add-form__btn">+</button>
-      </form>
+      <button className="fab" aria-label="Nouveau" onClick={() => setShowForm(true)}>+</button>
+
+      <AddSheet open={showForm} onClose={() => setShowForm(false)} title="Nouvel article">
+        <form aria-label="form" role="form" className="sheet-form" onSubmit={handleAdd}>
+          <select
+            className="add-form__select"
+            value={categorie}
+            onChange={e => setCategorie(e.target.value)}
+            style={{ maxWidth: 'none' }}
+          >
+            {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+          </select>
+          <input
+            className="add-form__input"
+            value={newNom}
+            onChange={e => setNewNom(e.target.value)}
+            placeholder="Ajouter un article…"
+          />
+          <button type="submit" className="sheet-form__submit">Ajouter</button>
+        </form>
+      </AddSheet>
     </div>
   )
 }

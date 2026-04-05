@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useNotes } from '../hooks/useNotes'
+import AddSheet from '../components/AddSheet'
 import '../styles/module.css'
 
 export default function NotesPage() {
@@ -13,6 +14,7 @@ export default function NotesPage() {
   const [contenu, setContenu] = useState('')
   const [editingId, setEditingId] = useState(null)
   const [editContent, setEditContent] = useState('')
+  const [showForm, setShowForm] = useState(false)
 
   if (loading) return <div className="module-page" style={{ '--module-accent': '#ec4899' }} />
 
@@ -27,6 +29,7 @@ export default function NotesPage() {
       couleurCreePar: profile.couleur,
     })
     setContenu('')
+    setShowForm(false)
   }
 
   async function handleSave(id) {
@@ -108,21 +111,20 @@ export default function NotesPage() {
         ))}
       </div>
 
-      <form
-        role="form"
-        className="add-form add-form--column"
-        onSubmit={handleSubmit}
-        aria-label="Ajouter une note"
-      >
-        <textarea
-          className="add-form__textarea"
-          aria-label="nouvelle note"
-          placeholder="Nouvelle note…"
-          value={contenu}
-          onChange={e => setContenu(e.target.value)}
-        />
-        <button type="submit" className="add-form__btn" aria-label="Ajouter">+</button>
-      </form>
+      <button className="fab" aria-label="Nouveau" onClick={() => setShowForm(true)}>+</button>
+
+      <AddSheet open={showForm} onClose={() => setShowForm(false)} title="Nouvelle note">
+        <form role="form" className="sheet-form" onSubmit={handleSubmit} aria-label="Ajouter une note">
+          <textarea
+            className="note-edit-textarea"
+            aria-label="nouvelle note"
+            placeholder="Nouvelle note…"
+            value={contenu}
+            onChange={e => setContenu(e.target.value)}
+          />
+          <button type="submit" className="sheet-form__submit">Ajouter</button>
+        </form>
+      </AddSheet>
     </div>
   )
 }

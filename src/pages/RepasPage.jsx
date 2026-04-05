@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useRepas } from '../hooks/useRepas'
+import AddSheet from '../components/AddSheet'
 import '../styles/module.css'
 
 const PILLS = ['Tout', 'Déjeuner', 'Dîner', 'Autre']
@@ -21,6 +22,7 @@ export default function RepasPage() {
   const [activePill, setActivePill] = useState('Tout')
   const [nom, setNom] = useState('')
   const [type, setType] = useState('dîner')
+  const [showForm, setShowForm] = useState(false)
 
   if (loading) return <div className="module-page" style={{ '--module-accent': '#f97316' }} />
 
@@ -36,6 +38,7 @@ export default function RepasPage() {
     if (!trimmed) return
     await addIdee({ nom: trimmed, type, ajoutePar: user.uid })
     setNom('')
+    setShowForm(false)
   }
 
   return (
@@ -119,29 +122,29 @@ export default function RepasPage() {
         )}
       </div>
 
-      <form
-        role="form"
-        className="add-form"
-        onSubmit={handleSubmit}
-        aria-label="Ajouter une idée"
-      >
-        <select
-          className="add-form__select"
-          value={type}
-          onChange={e => setType(e.target.value)}
-        >
-          <option value="dîner">dîner</option>
-          <option value="déjeuner">déjeuner</option>
-          <option value="autre">autre</option>
-        </select>
-        <input
-          className="add-form__input"
-          placeholder="Ajouter une idée…"
-          value={nom}
-          onChange={e => setNom(e.target.value)}
-        />
-        <button type="submit" className="add-form__btn" aria-label="Ajouter">+</button>
-      </form>
+      <button className="fab" aria-label="Nouveau" onClick={() => setShowForm(true)}>+</button>
+
+      <AddSheet open={showForm} onClose={() => setShowForm(false)} title="Nouvelle idée">
+        <form role="form" className="sheet-form" onSubmit={handleSubmit} aria-label="Ajouter une idée">
+          <select
+            className="add-form__select"
+            value={type}
+            onChange={e => setType(e.target.value)}
+            style={{ maxWidth: 'none' }}
+          >
+            <option value="dîner">dîner</option>
+            <option value="déjeuner">déjeuner</option>
+            <option value="autre">autre</option>
+          </select>
+          <input
+            className="add-form__input"
+            placeholder="Ajouter une idée…"
+            value={nom}
+            onChange={e => setNom(e.target.value)}
+          />
+          <button type="submit" className="sheet-form__submit">Ajouter</button>
+        </form>
+      </AddSheet>
     </div>
   )
 }

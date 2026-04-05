@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useFrigo, getExpiryStatus } from '../hooks/useFrigo'
+import AddSheet from '../components/AddSheet'
 import '../styles/module.css'
 
 const EMPLACEMENTS = ['frigo', 'congelateur', 'garde-manger']
@@ -79,15 +80,7 @@ export default function FrigoPage() {
       <header className="page-header">
         <button className="page-header__back" onClick={() => navigate('/')}>‹ Retour</button>
         <h1 className="page-header__title">Frigo</h1>
-        <div className="page-header__action">
-          <button
-            className="page-header__back"
-            style={{ color: 'var(--color-yves-light)' }}
-            onClick={() => setShowForm(v => !v)}
-          >
-            {showForm ? '✕' : '＋'}
-          </button>
-        </div>
+        <div className="page-header__action" />
       </header>
 
       <div className="filter-pills">
@@ -114,18 +107,17 @@ export default function FrigoPage() {
         ))}
       </div>
 
-      {showForm && (
-        <form aria-label="form" role="form" className="add-form" style={{ flexDirection: 'column', gap: '0.5rem', padding: '1rem 1.2rem 1.5rem' }} onSubmit={handleAdd}>
-          <div style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
-            <input
-              className="add-form__input"
-              value={newNom}
-              onChange={e => setNewNom(e.target.value)}
-              placeholder="Ajouter un produit…"
-            />
-            <button type="submit" className="add-form__btn">+</button>
-          </div>
-          <div style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
+      <button className="fab" aria-label="Nouveau" onClick={() => setShowForm(true)}>+</button>
+
+      <AddSheet open={showForm} onClose={() => setShowForm(false)} title="Nouveau produit">
+        <form aria-label="form" role="form" className="sheet-form" onSubmit={handleAdd}>
+          <input
+            className="add-form__input"
+            value={newNom}
+            onChange={e => setNewNom(e.target.value)}
+            placeholder="Ajouter un produit…"
+          />
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
             <input
               className="add-form__input"
               value={quantite}
@@ -136,16 +128,16 @@ export default function FrigoPage() {
             <select className="add-form__select" style={{ flex: 1, maxWidth: 'none' }} value={emplacement} onChange={e => setEmplacement(e.target.value)}>
               {EMPLACEMENTS.map(e => <option key={e} value={e}>{LABELS[e]}</option>)}
             </select>
-            <input
-              className="add-form__input"
-              type="date"
-              value={dateExp}
-              onChange={e => setDateExp(e.target.value)}
-              style={{ maxWidth: 140 }}
-            />
           </div>
+          <input
+            className="add-form__input"
+            type="date"
+            value={dateExp}
+            onChange={e => setDateExp(e.target.value)}
+          />
+          <button type="submit" className="sheet-form__submit">Ajouter</button>
         </form>
-      )}
+      </AddSheet>
     </div>
   )
 }

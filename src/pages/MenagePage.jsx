@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useMenage } from '../hooks/useMenage'
+import AddSheet from '../components/AddSheet'
 import '../styles/module.css'
 
 const PILLS = ['Tout', 'Quotidien', 'Hebdomadaire', 'Mensuel']
@@ -28,6 +29,7 @@ export default function MenagePage() {
   const [activePill, setActivePill] = useState('Tout')
   const [nom, setNom] = useState('')
   const [frequence, setFrequence] = useState('hebdomadaire')
+  const [showForm, setShowForm] = useState(false)
 
   if (loading) return <div className="module-page" style={{ '--module-accent': '#a855f7' }} />
 
@@ -44,6 +46,7 @@ export default function MenagePage() {
     if (!trimmed) return
     await addTache({ nom: trimmed, frequence, ajoutePar: user.uid })
     setNom('')
+    setShowForm(false)
   }
 
   return (
@@ -133,29 +136,29 @@ export default function MenagePage() {
         )}
       </div>
 
-      <form
-        role="form"
-        className="add-form"
-        onSubmit={handleSubmit}
-        aria-label="Ajouter une tâche"
-      >
-        <select
-          className="add-form__select"
-          value={frequence}
-          onChange={e => setFrequence(e.target.value)}
-        >
-          <option value="hebdomadaire">Hebdo</option>
-          <option value="quotidien">Quotidien (j)</option>
-          <option value="mensuel">Mensuel (m)</option>
-        </select>
-        <input
-          className="add-form__input"
-          placeholder="Ajouter une tâche…"
-          value={nom}
-          onChange={e => setNom(e.target.value)}
-        />
-        <button type="submit" className="add-form__btn" aria-label="Ajouter">+</button>
-      </form>
+      <button className="fab" aria-label="Nouveau" onClick={() => setShowForm(true)}>+</button>
+
+      <AddSheet open={showForm} onClose={() => setShowForm(false)} title="Nouvelle tâche">
+        <form role="form" className="sheet-form" onSubmit={handleSubmit} aria-label="Ajouter une tâche">
+          <select
+            className="add-form__select"
+            value={frequence}
+            onChange={e => setFrequence(e.target.value)}
+            style={{ maxWidth: 'none' }}
+          >
+            <option value="hebdomadaire">Hebdo</option>
+            <option value="quotidien">Quotidien (j)</option>
+            <option value="mensuel">Mensuel (m)</option>
+          </select>
+          <input
+            className="add-form__input"
+            placeholder="Ajouter une tâche…"
+            value={nom}
+            onChange={e => setNom(e.target.value)}
+          />
+          <button type="submit" className="sheet-form__submit">Ajouter</button>
+        </form>
+      </AddSheet>
     </div>
   )
 }

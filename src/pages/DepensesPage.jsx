@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useDepenses } from '../hooks/useDepenses'
+import AddSheet from '../components/AddSheet'
 import '../styles/module.css'
 
 const CATEGORIES = ['Courses', 'Restaurant', 'Transport', 'Maison', 'Loisirs', 'Autre']
@@ -26,6 +27,7 @@ export default function DepensesPage() {
   const [description, setDescription] = useState('')
   const [montant, setMontant] = useState('')
   const [categorie, setCategorie] = useState(CATEGORIES[0])
+  const [showForm, setShowForm] = useState(false)
 
   if (loading) return <div className="module-page" style={{ '--module-accent': '#eab308' }} />
 
@@ -41,6 +43,7 @@ export default function DepensesPage() {
     await addDepense({ description: trimmed, montant: valeur, categorie, ajoutePar: user.uid })
     setDescription('')
     setMontant('')
+    setShowForm(false)
   }
 
   return (
@@ -87,33 +90,37 @@ export default function DepensesPage() {
         ))}
       </div>
 
-      <form role="form" className="add-form" onSubmit={handleSubmit} aria-label="Ajouter une dépense">
-        <select
-          className="add-form__select"
-          value={categorie}
-          onChange={e => setCategorie(e.target.value)}
-          aria-label="Catégorie"
-        >
-          {CATEGORIES.map(c => <option key={c} value={c}>{CAT_SHORT[c] ?? c}</option>)}
-        </select>
-        <input
-          className="add-form__input"
-          placeholder="Description…"
-          value={description}
-          onChange={e => setDescription(e.target.value)}
-        />
-        <input
-          className="add-form__input"
-          type="number"
-          min="0.01"
-          step="0.01"
-          placeholder="0.00"
-          value={montant}
-          onChange={e => setMontant(e.target.value)}
-          style={{ maxWidth: '72px' }}
-        />
-        <button type="submit" className="add-form__btn" aria-label="Ajouter">+</button>
-      </form>
+      <button className="fab" aria-label="Nouveau" onClick={() => setShowForm(true)}>+</button>
+
+      <AddSheet open={showForm} onClose={() => setShowForm(false)} title="Nouvelle dépense">
+        <form role="form" className="sheet-form" onSubmit={handleSubmit} aria-label="Ajouter une dépense">
+          <select
+            className="add-form__select"
+            value={categorie}
+            onChange={e => setCategorie(e.target.value)}
+            aria-label="Catégorie"
+            style={{ maxWidth: 'none' }}
+          >
+            {CATEGORIES.map(c => <option key={c} value={c}>{CAT_SHORT[c] ?? c}</option>)}
+          </select>
+          <input
+            className="add-form__input"
+            placeholder="Description…"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+          />
+          <input
+            className="add-form__input"
+            type="number"
+            min="0.01"
+            step="0.01"
+            placeholder="0.00"
+            value={montant}
+            onChange={e => setMontant(e.target.value)}
+          />
+          <button type="submit" className="sheet-form__submit">Ajouter</button>
+        </form>
+      </AddSheet>
     </div>
   )
 }

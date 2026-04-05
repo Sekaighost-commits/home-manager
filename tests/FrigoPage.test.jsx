@@ -49,14 +49,13 @@ describe('FrigoPage', () => {
 
   it('filters by emplacement when pill is clicked', () => {
     wrap(<FrigoPage />)
-    fireEvent.click(screen.getByText('Congélateur'))
+    fireEvent.click(screen.getByRole('button', { name: 'Congélateur' }))
     expect(screen.getByText('Glace')).toBeInTheDocument()
     expect(screen.queryByText('Yaourt')).not.toBeInTheDocument()
   })
 
   it('calls addProduit when form is submitted', async () => {
     wrap(<FrigoPage />)
-    fireEvent.click(screen.getByText('＋'))
     fireEvent.change(screen.getByPlaceholderText(/ajouter un produit/i), { target: { value: 'Lait' } })
     fireEvent.submit(screen.getByRole('form'))
     await waitFor(() => expect(mockAddProduit).toHaveBeenCalledWith(expect.objectContaining({ nom: 'Lait' })))

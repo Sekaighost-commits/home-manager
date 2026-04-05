@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useAgenda } from '../hooks/useAgenda'
+import AddSheet from '../components/AddSheet'
 import '../styles/module.css'
 
 function formatDate(dateStr) {
@@ -18,6 +19,7 @@ export default function AgendaPage() {
 
   const [titre, setTitre] = useState('')
   const [date, setDate] = useState('')
+  const [showForm, setShowForm] = useState(false)
 
   if (loading) return <div className="module-page" style={{ '--module-accent': '#3b82f6' }} />
 
@@ -28,6 +30,7 @@ export default function AgendaPage() {
     await addEvenement({ titre: trimmed, date, ajoutePar: user.uid })
     setTitre('')
     setDate('')
+    setShowForm(false)
   }
 
   return (
@@ -63,28 +66,27 @@ export default function AgendaPage() {
         ))}
       </div>
 
-      <form
-        role="form"
-        className="add-form add-form--column"
-        onSubmit={handleSubmit}
-        aria-label="Ajouter un évènement"
-      >
-        <input
-          className="add-form__input"
-          aria-label="titre"
-          placeholder="Titre…"
-          value={titre}
-          onChange={e => setTitre(e.target.value)}
-        />
-        <input
-          className="add-form__input"
-          type="date"
-          aria-label="date"
-          value={date}
-          onChange={e => setDate(e.target.value)}
-        />
-        <button type="submit" className="add-form__btn" aria-label="Ajouter">+</button>
-      </form>
+      <button className="fab" aria-label="Nouveau" onClick={() => setShowForm(true)}>+</button>
+
+      <AddSheet open={showForm} onClose={() => setShowForm(false)} title="Nouvel évènement">
+        <form role="form" className="sheet-form" onSubmit={handleSubmit} aria-label="Ajouter un évènement">
+          <input
+            className="add-form__input"
+            aria-label="titre"
+            placeholder="Titre…"
+            value={titre}
+            onChange={e => setTitre(e.target.value)}
+          />
+          <input
+            className="add-form__input"
+            type="date"
+            aria-label="date"
+            value={date}
+            onChange={e => setDate(e.target.value)}
+          />
+          <button type="submit" className="sheet-form__submit">Ajouter</button>
+        </form>
+      </AddSheet>
     </div>
   )
 }
