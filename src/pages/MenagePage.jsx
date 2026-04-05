@@ -29,7 +29,7 @@ export default function MenagePage() {
   const [nom, setNom] = useState('')
   const [frequence, setFrequence] = useState('hebdomadaire')
 
-  if (loading) return <div className="module-page" />
+  if (loading) return <div className="module-page" style={{ '--module-accent': '#a855f7' }} />
 
   const filtered = activePill === 'Tout'
     ? taches
@@ -47,7 +47,7 @@ export default function MenagePage() {
   }
 
   return (
-    <div className="module-page">
+    <div className="module-page" style={{ '--module-accent': '#a855f7' }}>
       <header className="page-header">
         <button className="page-header__back" onClick={() => navigate(-1)}>‹ Retour</button>
         <span className="page-header__title">Ménage</span>

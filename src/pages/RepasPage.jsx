@@ -22,7 +22,7 @@ export default function RepasPage() {
   const [nom, setNom] = useState('')
   const [type, setType] = useState('dîner')
 
-  if (loading) return <div className="module-page" />
+  if (loading) return <div className="module-page" style={{ '--module-accent': '#f97316' }} />
 
   const filtered = activePill === 'Tout'
     ? idees
@@ -39,7 +39,7 @@ export default function RepasPage() {
   }
 
   return (
-    <div className="module-page">
+    <div className="module-page" style={{ '--module-accent': '#f97316' }}>
       <header className="page-header">
         <button className="page-header__back" onClick={() => navigate(-1)}>‹ Retour</button>
         <span className="page-header__title">Idées Repas</span>

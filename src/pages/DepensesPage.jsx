@@ -27,7 +27,7 @@ export default function DepensesPage() {
   const [montant, setMontant] = useState('')
   const [categorie, setCategorie] = useState(CATEGORIES[0])
 
-  if (loading) return <div className="module-page" />
+  if (loading) return <div className="module-page" style={{ '--module-accent': '#eab308' }} />
 
   const filtered = activePill === 'Tout'
     ? depenses
@@ -44,7 +44,7 @@ export default function DepensesPage() {
   }
 
   return (
-    <div className="module-page">
+    <div className="module-page" style={{ '--module-accent': '#eab308' }}>
       <header className="page-header">
         <button className="page-header__back" onClick={() => navigate(-1)}>‹ Retour</button>
         <span className="page-header__title">Dépenses</span>
