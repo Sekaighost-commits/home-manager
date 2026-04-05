@@ -222,7 +222,8 @@
 .fab {
   position: fixed;
   bottom: calc(1.5rem + env(safe-area-inset-bottom));
-  right: max(1.2rem, calc((100vw - 430px) / 2 + 1.2rem));
+  left: 50%;
+  transform: translateX(-50%);
   width: 56px;
   height: 56px;
   border-radius: 50%;
