@@ -8,7 +8,6 @@ const LABELS = {
   '/menage':    { icon: '🧹', nom: 'Ménage' },
   '/bricolage': { icon: '🔧', nom: 'Bricolage' },
   '/depenses':  { icon: '💰', nom: 'Dépenses' },
-  '/agenda':    { icon: '📅', nom: 'Agenda' },
   '/notes':     { icon: '📝', nom: 'Notes' },
 }
 
