@@ -19,7 +19,7 @@ export default function AgendaPage() {
   const [titre, setTitre] = useState('')
   const [date, setDate] = useState('')
 
-  if (loading) return <div className="module-page" />
+  if (loading) return <div className="module-page" style={{ '--module-accent': '#3b82f6' }} />
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -31,7 +31,7 @@ export default function AgendaPage() {
   }
 
   return (
-    <div className="module-page">
+    <div className="module-page" style={{ '--module-accent': '#3b82f6' }}>
       <header className="page-header">
         <button className="page-header__back" onClick={() => navigate(-1)}>‹ Retour</button>
         <span className="page-header__title">Agenda</span>

@@ -1,13 +1,14 @@
 /* src/styles/module.css — styles partagés pour tous les modules */
 
 .module-page {
-  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg-base);
   max-width: 430px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  padding-bottom: 100px;
+  padding-bottom: calc(90px + env(safe-area-inset-bottom));
 }
 
 /* ── Header ── */
@@ -15,18 +16,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 3.5rem 1.2rem 1rem;
+  padding: max(3rem, calc(env(safe-area-inset-top) + 1.2rem)) 1.2rem 1rem;
   position: sticky;
   top: 0;
-  background: var(--bg-base);
+  background: color-mix(in srgb, var(--module-accent) 8%, var(--bg-base));
   z-index: 10;
 }
 
 .page-header__back {
   background: none;
   border: none;
-  color: var(--color-yves-light);
-  font-size: 1.1rem;
+  color: var(--module-accent);
+  font-size: 1.05rem;
   font-weight: 600;
   padding: 0.4rem 0;
   min-width: 60px;
@@ -59,20 +60,20 @@
 
 .filter-pill {
   flex-shrink: 0;
-  padding: 0.4rem 0.9rem;
+  padding: 0.45rem 1rem;
   border-radius: var(--radius-pill);
   border: 1px solid var(--border-card);
   background: var(--bg-glass);
   color: var(--text-secondary);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 600;
   -webkit-tap-highlight-color: transparent;
   transition: all 0.15s;
 }
 
 .filter-pill.active {
-  background: var(--color-yves);
-  border-color: var(--color-yves);
+  background: var(--module-accent);
+  border-color: var(--module-accent);
   color: #fff;
 }
 
@@ -82,7 +83,7 @@
   padding: 0 1.2rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.55rem;
 }
 
 .section-label {
@@ -101,19 +102,20 @@
   gap: 0.8rem;
   background: var(--bg-glass);
   border: 1px solid var(--border-card);
+  border-left: 3px solid color-mix(in srgb, var(--module-accent) 45%, transparent);
   border-radius: 14px;
-  padding: 0.85rem 1rem;
+  padding: 0.9rem 1rem;
   transition: opacity 0.2s;
   -webkit-tap-highlight-color: transparent;
 }
 
 .list-item.done {
-  opacity: 0.45;
+  opacity: 0.4;
 }
 
 .list-item__check {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   border: 2px solid var(--border-card);
   background: none;
@@ -126,8 +128,8 @@
 }
 
 .list-item__check.checked {
-  background: var(--color-enza);
-  border-color: var(--color-enza);
+  background: var(--module-accent);
+  border-color: var(--module-accent);
   color: #fff;
 }
 
@@ -151,9 +153,9 @@
 }
 
 .list-item__meta {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
-  margin-top: 0.1rem;
+  margin-top: 0.15rem;
 }
 
 .list-item__avatar {
@@ -173,8 +175,17 @@
   background: none;
   border: none;
   color: var(--text-muted);
-  font-size: 1.1rem;
-  padding: 0.2rem;
+  font-size: 1.2rem;
+  padding: 0.3rem 0.1rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.list-item__edit {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  padding: 0.3rem;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -185,13 +196,13 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
-  gap: 0.8rem;
+  gap: 1rem;
   color: var(--text-muted);
   text-align: center;
 }
 
-.empty-state__icon { font-size: 3rem; }
-.empty-state__text { font-size: 0.9rem; font-weight: 500; }
+.empty-state__icon { font-size: 3.2rem; }
+.empty-state__text { font-size: 0.95rem; font-weight: 500; }
 
 /* ── Bouton secondaire ── */
 .clear-btn {
@@ -218,11 +229,21 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.8rem 1.2rem 1.5rem;
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border-card);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  padding: 0.85rem 1.2rem calc(1.2rem + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--module-accent) 6%, var(--bg-secondary));
+  border-top: 1px solid color-mix(in srgb, var(--module-accent) 20%, var(--border-card));
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.add-form--column {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.6rem;
+}
+
+.add-form--column .add-form__btn {
+  align-self: flex-end;
 }
 
 .add-form__select {
@@ -230,12 +251,12 @@
   border: 1px solid var(--border-card);
   border-radius: 10px;
   color: var(--text-secondary);
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  padding: 0.6rem 0.5rem;
+  padding: 0.65rem 0.6rem;
   outline: none;
   flex-shrink: 0;
-  max-width: 90px;
+  max-width: 95px;
 }
 
 .add-form__input {
@@ -243,23 +264,25 @@
   background: var(--bg-input);
   border: 1px solid var(--border-card);
   border-radius: var(--radius-input);
-  padding: 0.75rem 1rem;
+  padding: 0.8rem 1rem;
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--text-primary);
   outline: none;
 }
 
-.add-form__input:focus { border-color: var(--color-yves); }
+.add-form__input:focus {
+  border-color: var(--module-accent);
+}
 
 .add-form__btn {
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  background: var(--color-yves);
+  background: var(--module-accent);
   border: none;
   color: #fff;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -294,4 +317,36 @@
   background: var(--bg-tertiary);
   border-radius: 6px;
   padding: 0.15rem 0.4rem;
+}
+
+/* ── Edit textarea (Notes) ── */
+.note-edit-textarea {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--module-accent);
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  outline: none;
+  resize: none;
+  min-height: 70px;
+  font-family: inherit;
+}
+
+.note-edit-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.note-edit-actions button {
+  background: none;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  font-family: inherit;
 }

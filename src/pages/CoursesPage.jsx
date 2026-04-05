@@ -52,10 +52,10 @@ export default function CoursesPage() {
     setNewNom('')
   }
 
-  if (loading) return <div className="module-page" />
+  if (loading) return <div className="module-page" style={{ '--module-accent': '#22c55e' }} />
 
   return (
-    <div className="module-page">
+    <div className="module-page" style={{ '--module-accent': '#22c55e' }}>
       <header className="page-header">
         <button className="page-header__back" onClick={() => navigate('/')}>‹ Retour</button>
         <h1 className="page-header__title">Courses</h1>

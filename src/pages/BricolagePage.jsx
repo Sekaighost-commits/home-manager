@@ -31,7 +31,7 @@ export default function BricolagePage() {
   const [titre, setTitre] = useState('')
   const [priorite, setPriorite] = useState('normal')
 
-  if (loading) return <div className="module-page" />
+  if (loading) return <div className="module-page" style={{ '--module-accent': '#f59e0b' }} />
 
   const filtered = activePill === 'Tout'
     ? travaux
@@ -46,7 +46,7 @@ export default function BricolagePage() {
   }
 
   return (
-    <div className="module-page">
+    <div className="module-page" style={{ '--module-accent': '#f59e0b' }}>
       <header className="page-header">
         <button className="page-header__back" onClick={() => navigate(-1)}>‹ Retour</button>
         <span className="page-header__title">Bricolage</span>

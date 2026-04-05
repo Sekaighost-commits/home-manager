@@ -6,14 +6,14 @@ import AlertBanner from '../components/AlertBanner'
 import '../styles/dashboard.css'
 
 const MODULES = [
-  { id: 'courses',   icon: '🛒', nom: 'Courses',   path: '/courses' },
-  { id: 'repas',     icon: '🍽️', nom: 'Repas',     path: '/repas' },
-  { id: 'frigo',     icon: '🧊', nom: 'Frigo',     path: '/frigo' },
-  { id: 'menage',    icon: '🧹', nom: 'Ménage',    path: '/menage' },
-  { id: 'bricolage', icon: '🔧', nom: 'Bricolage', path: '/bricolage' },
-  { id: 'depenses',  icon: '💰', nom: 'Dépenses',  path: '/depenses' },
-  { id: 'agenda',    icon: '📅', nom: 'Agenda',    path: '/agenda' },
-  { id: 'notes',     icon: '📝', nom: 'Notes',     path: '/notes' },
+  { id: 'courses',   icon: '🛒', nom: 'Courses',   path: '/courses',   color: '#22c55e' },
+  { id: 'repas',     icon: '🍽️', nom: 'Repas',     path: '/repas',     color: '#f97316' },
+  { id: 'frigo',     icon: '🧊', nom: 'Frigo',     path: '/frigo',     color: '#06b6d4' },
+  { id: 'menage',    icon: '🧹', nom: 'Ménage',    path: '/menage',    color: '#a855f7' },
+  { id: 'bricolage', icon: '🔧', nom: 'Bricolage', path: '/bricolage', color: '#f59e0b' },
+  { id: 'depenses',  icon: '💰', nom: 'Dépenses',  path: '/depenses',  color: '#eab308' },
+  { id: 'agenda',    icon: '📅', nom: 'Agenda',    path: '/agenda',    color: '#3b82f6' },
+  { id: 'notes',     icon: '📝', nom: 'Notes',     path: '/notes',     color: '#ec4899' },
 ]
 
 function formatDate() {

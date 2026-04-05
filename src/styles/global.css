@@ -33,6 +33,9 @@
   --radius-card: 20px;
   --radius-input: 14px;
   --radius-pill: 50px;
+
+  /* Couleur d'accentuation du module courant (surchargée via inline style sur chaque page) */
+  --module-accent: #2563eb;
 }
 
 *, *::before, *::after {
@@ -49,14 +52,14 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
   background-color: var(--bg-base);
   color: var(--text-primary);
-  min-height: 100vh;
+  min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior: none;
 }
 
 #root {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }

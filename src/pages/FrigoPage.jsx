@@ -72,10 +72,10 @@ export default function FrigoPage() {
     setShowForm(false)
   }
 
-  if (loading) return <div className="module-page" />
+  if (loading) return <div className="module-page" style={{ '--module-accent': '#06b6d4' }} />
 
   return (
-    <div className="module-page">
+    <div className="module-page" style={{ '--module-accent': '#06b6d4' }}>
       <header className="page-header">
         <button className="page-header__back" onClick={() => navigate('/')}>‹ Retour</button>
         <h1 className="page-header__title">Frigo</h1>
