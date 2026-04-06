@@ -22,6 +22,7 @@ export function useCourses(foyerId) {
       setArticles(
         snap.docs
           .map(d => ({ id: d.id, ...d.data() }))
+          .filter(a => !a.archived)
           .sort((a, b) => (a.createdAt?.seconds ?? 0) - (b.createdAt?.seconds ?? 0))
       )
       setLoading(false)
@@ -54,7 +55,10 @@ export function useCourses(foyerId) {
 
   async function clearDone() {
     const done = articles.filter(a => a.fait)
-    await Promise.all(done.map(a => deleteDoc(doc(db, 'coursesArticles', a.id))))
+    await Promise.all(done.map(a => updateDoc(doc(db, 'coursesArticles', a.id), {
+      archived: true,
+      archivedAt: serverTimestamp(),
+    })))
   }
 
   return { articles, loading, addArticle, toggleArticle, deleteArticle, clearDone }
