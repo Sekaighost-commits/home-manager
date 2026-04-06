@@ -61,4 +61,33 @@ describe('useAgenda', () => {
     })
     expect(deleteDoc).toHaveBeenCalledOnce()
   })
+
+  it('passes commun field to Firestore when addEvenement is called with commun:true', async () => {
+    const { addDoc } = await import('firebase/firestore')
+    const { result } = renderHook(() => useAgenda('foyer-1'))
+    await act(async () => {
+      await result.current.addEvenement({
+        titre: 'Dîner en famille',
+        date: '2026-04-20',
+        ajoutePar: 'uid-yves',
+        commun: true,
+      })
+    })
+    const arg = vi.mocked(addDoc).mock.calls[0][1]
+    expect(arg.commun).toBe(true)
+  })
+
+  it('defaults commun to false when not provided', async () => {
+    const { addDoc } = await import('firebase/firestore')
+    const { result } = renderHook(() => useAgenda('foyer-1'))
+    await act(async () => {
+      await result.current.addEvenement({
+        titre: 'Dentiste',
+        date: '2026-04-21',
+        ajoutePar: 'uid-yves',
+      })
+    })
+    const arg = vi.mocked(addDoc).mock.calls[0][1]
+    expect(arg.commun).toBe(false)
+  })
 })

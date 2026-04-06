@@ -29,12 +29,13 @@ export function useAgenda(foyerId) {
     return unsub
   }, [foyerId])
 
-  async function addEvenement({ titre, date, ajoutePar }) {
+  async function addEvenement({ titre, date, ajoutePar, commun }) {
     await addDoc(collection(db, 'agenda'), {
       foyerId,
       titre,
       date,
       ajoutePar,
+      commun: commun ?? false,
       createdAt: serverTimestamp(),
     })
   }
