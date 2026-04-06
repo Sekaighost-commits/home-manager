@@ -45,10 +45,11 @@ await updateDoc(doc(db, 'coursesArticles', a.id), {
 // query Firestore (inchangée)
 query(collection(db, 'coursesArticles'), where('foyerId', '==', foyerId))
 
-// filtrage client-side dans le callback onSnapshot
+// filtrage client-side dans le callback onSnapshot (conserver le .sort() existant)
 setArticles(snap.docs
   .map(d => ({ id: d.id, ...d.data() }))
   .filter(a => !a.archived)
+  .sort((a, b) => a.createdAt?.toMillis?.() - b.createdAt?.toMillis?.())
 )
 ```
 
@@ -90,7 +91,11 @@ const fin   = Timestamp.fromDate(new Date(annee, mois + 1, 1))
 
 - Courses : `archivedAt >= debut` et `archivedAt < fin`
 - Dépenses : `createdAt >= debut` et `createdAt < fin`
-- Agenda : `date >= 'YYYY-MM-01'` et `date < 'YYYY-(MM+1)-01'` (string ISO, borne ouverte)
+- Agenda : `date >= debutStr` et `date < finStr` (string ISO, borne ouverte), où :
+  ```js
+  const debutStr = new Date(annee, mois, 1).toISOString().slice(0, 10)       // ex. '2026-04-01'
+  const finStr   = new Date(annee, mois + 1, 1).toISOString().slice(0, 10)   // ex. '2026-05-01' — fonctionne en décembre grâce au rollover JS Date
+  ```
 
 **Guard :** si `foyerId` est null, retourne immédiatement `{ courses: [], depenses: [], agenda: [], totalDepenses: 0, depensesParCategorie: [], loading: false }`.
 
@@ -190,7 +195,7 @@ Ajouter `<Route path="/recap" element={<RecapPage />} />` dans `App.jsx`.
 | `src/App.jsx` | Modifier (nouvelle route) |
 | `tests/useRecap.test.js` | Créer |
 | `tests/RecapPage.test.jsx` | Créer |
-| `tests/useCourses.test.js` | Modifier (2 tests ajoutés) |
+| `tests/useCourses.test.js` | Modifier (1 test remplacé + 1 test ajouté) |
 | `firestore.rules` | Vérifier (pas de changement attendu) |
 
 ---
