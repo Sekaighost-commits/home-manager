@@ -39,18 +39,20 @@ await updateDoc(doc(db, 'coursesArticles', a.id), {
 })
 ```
 
-**Query onSnapshot** : ajoute un filtre pour exclure les archivés de la vue normale :
+**Query onSnapshot** : la query Firestore reste inchangée (filtre uniquement sur `foyerId`). Le filtrage des articles archivés se fait côté client dans le `.map()` :
 
 ```js
-query(
-  collection(db, 'coursesArticles'),
-  where('foyerId', '==', foyerId),
-  where('archived', '!=', true),
-  orderBy('createdAt')
+// query Firestore (inchangée)
+query(collection(db, 'coursesArticles'), where('foyerId', '==', foyerId))
+
+// filtrage client-side dans le callback onSnapshot
+setArticles(snap.docs
+  .map(d => ({ id: d.id, ...d.data() }))
+  .filter(a => !a.archived)
 )
 ```
 
-> ⚠️ Index composite Firestore requis : `(foyerId ASC, archived ASC, createdAt ASC)`
+> Aucun index composite supplémentaire requis.
 
 ### Hook `useRecap(foyerId, annee, mois)`
 
@@ -64,7 +66,9 @@ Fait 3 queries `onSnapshot` en parallèle au montage et se désabonne au démont
 {
   courses: Array<{ id, nom, archivedAt, ... }>,
   depenses: Array<{ id, montant, categorie, createdAt, ... }>,
-  agenda: Array<{ id, titre, date, ajoutePar, commun }>,
+  agenda: Array<{ id, titre, date, ajoutePar }>,
+  totalDepenses: number,
+  depensesParCategorie: Array<{ categorie: string, total: number }>,
   loading: boolean,
 }
 ```
@@ -76,13 +80,23 @@ Fait 3 queries `onSnapshot` en parallèle au montage et se désabonne au démont
 
 **Fenêtre temporelle :**
 
-- Courses : `archivedAt >= début_mois` et `archivedAt < début_mois_suivant`
-- Dépenses : `createdAt >= début_mois` et `createdAt < début_mois_suivant`
-- Agenda : `date >= 'YYYY-MM-01'` et `date <= 'YYYY-MM-31'` (string ISO)
+Les bornes pour les champs `serverTimestamp` (`archivedAt`, `createdAt`) doivent utiliser `Timestamp.fromDate()` :
 
-**Guard :** si `foyerId` est null, retourne immédiatement `{ courses: [], depenses: [], agenda: [], loading: false }`.
+```js
+import { Timestamp } from 'firebase/firestore'
+const debut = Timestamp.fromDate(new Date(annee, mois, 1))
+const fin   = Timestamp.fromDate(new Date(annee, mois + 1, 1))
+```
+
+- Courses : `archivedAt >= debut` et `archivedAt < fin`
+- Dépenses : `createdAt >= debut` et `createdAt < fin`
+- Agenda : `date >= 'YYYY-MM-01'` et `date < 'YYYY-(MM+1)-01'` (string ISO, borne ouverte)
+
+**Guard :** si `foyerId` est null, retourne immédiatement `{ courses: [], depenses: [], agenda: [], totalDepenses: 0, depensesParCategorie: [], loading: false }`.
 
 **Subscriptions :** 3 `onSnapshot` indépendants, chacun mis à jour de façon autonome. `loading` passe à `false` quand les 3 ont résolu au moins une fois.
+
+**Changement de mois :** lorsque `annee` ou `mois` change (pill cliquée), `loading` repasse à `true` et les 3 snapshots sont relancés via le tableau de dépendances `[foyerId, annee, mois]` du `useEffect`.
 
 ---
 
@@ -99,7 +113,7 @@ Fichier : `src/pages/RecapPage.jsx`
 ```
 <div class="module-page" style="--module-accent: #8b5cf6">
   <header class="page-header">
-    <button>‹ Retour</button>
+    <button onClick={() => navigate('/')}>‹ Retour</button>  {/* navigate('/'), pas navigate(-1) */}
     <span>Récap</span>
     <span /> {/* spacer */}
   </header>
@@ -130,7 +144,7 @@ Fichier : `src/pages/RecapPage.jsx`
 
 ### Dashboard
 
-Ajouter une `ModuleCard` "Récap" dans `DashboardPage` pointant vers `/recap`, avec la couleur `#8b5cf6`.
+Ajouter une `ModuleCard` "Récap" dans `DashboardPage` pointant vers `/recap`, avec la couleur `#8b5cf6`. Pas de `subtitle` ni de `badge` — la carte est statique (pas de donnée dans `useDashboardSummary` pour ce module).
 
 ### Routing
 
@@ -156,10 +170,12 @@ Ajouter `<Route path="/recap" element={<RecapPage />} />` dans `App.jsx`.
 6. `shows depenses total and category breakdown` — total + lignes catégories
 7. `shows agenda events for selected month` — liste des évènements triés
 
-### `tests/useCourses.test.js` (2 tests ajoutés)
+### `tests/useCourses.test.js` (1 test remplacé + 1 test ajouté)
 
-1. `clearDone calls updateDoc with archived:true instead of deleteDoc` — vérifie `updateDoc` appelé avec `{ archived: true, archivedAt: serverTimestamp() }`
-2. `onSnapshot query filters archived != true` — vérifie le filtre dans la query
+> ⚠️ Le test existant `'calls deleteDoc when clearDone is called with done articles'` doit être **remplacé** (pas complété) par le test 1 ci-dessous — les deux assertions seraient contradictoires.
+
+1. `clearDone calls updateDoc with { archived: true, archivedAt } instead of deleteDoc` — vérifie `updateDoc` appelé avec les bons champs, et `deleteDoc` non appelé
+2. `onSnapshot excludes archived articles (client-side filter)` — vérifie que les articles avec `archived: true` sont filtrés du résultat retourné
 
 ---
 
