@@ -11,6 +11,7 @@ import BricolagePage from './pages/BricolagePage'
 import DepensesPage from './pages/DepensesPage'
 import NotesPage from './pages/NotesPage'
 import AgendaPage from './pages/AgendaPage'
+import RecapPage from './pages/RecapPage'
 import ComingSoonPage from './pages/ComingSoonPage'
 
 function ProtectedRoute({ children }) {
@@ -48,6 +49,7 @@ export default function App() {
           <Route path="/depenses"  element={<ProtectedRoute><DepensesPage /></ProtectedRoute>} />
           <Route path="/agenda"    element={<ProtectedRoute><AgendaPage /></ProtectedRoute>} />
           <Route path="/notes"     element={<ProtectedRoute><NotesPage /></ProtectedRoute>} />
+          <Route path="/recap"     element={<ProtectedRoute><RecapPage /></ProtectedRoute>} />
           <Route path="*"          element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

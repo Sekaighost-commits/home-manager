@@ -63,16 +63,36 @@ describe('useCourses', () => {
     expect(deleteDoc).toHaveBeenCalledOnce()
   })
 
-  it('calls deleteDoc when clearDone is called with done articles', async () => {
-    const { onSnapshot, deleteDoc } = await import('firebase/firestore')
+  it('clearDone calls updateDoc with { archived: true, archivedAt } instead of deleteDoc', async () => {
+    const { onSnapshot, updateDoc, deleteDoc } = await import('firebase/firestore')
     vi.mocked(onSnapshot).mockImplementationOnce((q, cb) => {
-      cb({ docs: [{ id: 'a1', data: () => ({ fait: true }) }] })
+      cb({ docs: [{ id: 'a1', data: () => ({ fait: true, nom: 'Lait', createdAt: { seconds: 1 } }) }] })
       return mockUnsub
     })
     const { result } = renderHook(() => useCourses('foyer-1'))
     await act(async () => {
       await result.current.clearDone()
     })
-    expect(deleteDoc).toHaveBeenCalledOnce()
+    expect(updateDoc).toHaveBeenCalledOnce()
+    const arg = vi.mocked(updateDoc).mock.calls[0][1]
+    expect(arg.archived).toBe(true)
+    expect(arg.archivedAt).toBeDefined()
+    expect(deleteDoc).not.toHaveBeenCalled()
+  })
+
+  it('onSnapshot excludes archived articles from articles list', async () => {
+    const { onSnapshot } = await import('firebase/firestore')
+    vi.mocked(onSnapshot).mockImplementationOnce((q, cb) => {
+      cb({
+        docs: [
+          { id: 'a1', data: () => ({ nom: 'Lait', fait: false, archived: false, createdAt: { seconds: 1 } }) },
+          { id: 'a2', data: () => ({ nom: 'Pain', fait: true,  archived: true,  createdAt: { seconds: 2 } }) },
+        ],
+      })
+      return mockUnsub
+    })
+    const { result } = renderHook(() => useCourses('foyer-1'))
+    expect(result.current.articles).toHaveLength(1)
+    expect(result.current.articles[0].nom).toBe('Lait')
   })
 })

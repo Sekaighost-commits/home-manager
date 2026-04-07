@@ -574,3 +574,105 @@
   height: 16px;
   accent-color: var(--module-accent);
 }
+
+/* ── Récap — Pills ── */
+.recap-pills {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0 1.2rem 1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.recap-pills::-webkit-scrollbar { display: none; }
+
+.recap-pill {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.recap-pill--selected {
+  background: var(--module-accent);
+  color: #fff;
+}
+
+/* ── Récap — Sections ── */
+.recap-section {
+  padding: 0 1.2rem 1.25rem;
+}
+
+.recap-section__title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.6rem;
+}
+
+/* ── Courses chips ── */
+.recap-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.recap-chip {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-card);
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+}
+
+/* ── Dépenses rows ── */
+.recap-depenses {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.recap-depense-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+}
+
+/* ── Agenda rows ── */
+.recap-agenda {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.recap-agenda-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+}
+
+.recap-agenda-date {
+  color: var(--module-accent);
+  font-weight: 600;
+  font-size: 0.78rem;
+  min-width: 3.5rem;
+}

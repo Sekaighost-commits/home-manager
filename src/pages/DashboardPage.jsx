@@ -14,6 +14,7 @@ const MODULES = [
   { id: 'depenses',  icon: '💰', nom: 'Dépenses',  path: '/depenses',  color: '#eab308' },
   { id: 'agenda',    icon: '📅', nom: 'Agenda',    path: '/agenda',    color: '#3b82f6' },
   { id: 'notes',     icon: '📝', nom: 'Notes',     path: '/notes',     color: '#ec4899' },
+  { id: 'recap',     icon: '📊', nom: 'Récap',     path: '/recap',     color: '#8b5cf6' },
 ]
 
 function formatDate() {
