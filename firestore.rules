@@ -7,9 +7,14 @@ service cloud.firestore {
         request.auth.uid in get(/databases/$(database)/documents/foyers/$(foyerId)).data.membres;
     }
 
-    // Profil utilisateur : lecture/écriture uniquement par le propriétaire
+    // Profil utilisateur : écriture uniquement par le propriétaire,
+    // lecture autorisée aux membres du même foyer (pour les couleurs d'avatar)
     match /utilisateurs/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+      allow read: if request.auth != null && (
+        request.auth.uid == uid ||
+        isMembre(resource.data.foyerId)
+      );
+      allow write: if request.auth != null && request.auth.uid == uid;
     }
 
     // Foyers : lisible/modifiable par les membres
